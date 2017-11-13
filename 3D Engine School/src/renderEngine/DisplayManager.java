@@ -4,7 +4,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.PixelFormat;
@@ -29,7 +28,13 @@ public class DisplayManager {
 		try {
 			// Sets the display to a predetermined width and height, and assigns the OpenGL attributes to it
 			//Display.setDisplayMode(new DisplayMode(WIDTH,HEIGHT));
-			Display.setFullscreen(true);
+			
+			System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+			
+			// Enables V-Sync to prevent vertical screen tearing
+			Display.setVSyncEnabled(true);
+			
+			Display.setFullscreen(false);
 			Display.create(new PixelFormat(), attribs);
 			Display.setTitle("Terrain Generator");
 			GL11.glEnable(GL13.GL_MULTISAMPLE);

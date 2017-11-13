@@ -3,8 +3,7 @@
 in vec3 position;
 
 
-out vec3 pass_position;
-out vec2 pass_amplitude;
+out float height;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
@@ -29,10 +28,16 @@ void main(void){
 	// This is what makes everything that is farther from the camera look farther away. This is the last
 	// translation performed so the vertex vector is passed to gl_Position, which "draws" the vertex
 	gl_Position = projectionMatrix * positionRelativeToCam;
+
 	
-	// Passes the positions of the vertex to the fragment shader for color calculations to be completed.
-	pass_position = position;
-	pass_amplitude = amplitude;
+	// The amplitude vector is of the form (max, min) so this converts those values into one float for use as the real amplitude
+	float amp = amplitude.x - amplitude.y;
 	
+	// 10 different colors, 1/10 = 0.1
+	float interval = 0.1;
+	
+	// The height value of the vertex is on [min,max] (the amplitude of the terrain generator is not necessarily constant)
+	// So this is scaled to a more manageable interval of [0,1]
+	height = ((position.y / amp) - (amplitude.y / amp));
 	
 }

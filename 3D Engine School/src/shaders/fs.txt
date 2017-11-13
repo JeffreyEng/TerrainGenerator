@@ -1,7 +1,6 @@
 #version 330
 
-in vec3 pass_position;
-in vec2 pass_amplitude;
+in float height;
 out vec4 out_Color;
 
 // This is an array of color values in a specific order. To get these values I googled a contour map that had a nice color scheme, and I used a web tool to get the RGB values of each of the color intervals.
@@ -22,29 +21,15 @@ const vec3 heightColor[11] = vec3[11](
 
 void main(void){
 
-	// The amplitude vector is of the form (max, min) so this converts those values into one float for use as the real amplitude
-	float amp = pass_amplitude.x - pass_amplitude.y;
-
-	// Initializes a color vector (r, g, b)
 	vec3 color = vec3(0.0);
 	
-	// 10 different colors, 1/10 = 0.1
-	float interval = 0.1;
-	
-	// The height value of the vertex is on [min,max] (the amplitude of the terrain generator is not necessarily constant)
-	// So this is scaled to a more manageable interval of [0,1]
-	float height = ((pass_position.y / amp) - (pass_amplitude.y / amp));
-
-	// for each color, if the height is greater than the interval * i, then it is that color
+	// While coloring each individual pixel per frame in this way is exhaustive, the scale of this program is relatively low so this is not a huge concern, resource wise.
 	for(int i = 0; i < 11; i ++){
-		if(height > (interval * i)){
+		if(height > (0.1 * i)){
 			color = heightColor[i];
 		}
 	}
 	
-	// While coloring each individual pixel per frame in this way is exhaustive, the scale of this program is relatively low so this is not a huge concern, resource wise.
-	
-
 	// OpenGL colors are 4 dimensional vectors, for red, green, blue, and alpha, so the color is converted to 4D
 	vec4 totalColor = vec4(color.x, color.y, color.z,1);
 	

@@ -1,5 +1,7 @@
 package renderEngine;
 
+import java.util.List;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -18,7 +20,7 @@ public class Renderer {
 	// Field of view stuff
 	public static final float FOV = 70;
 	public static final float NEAR_PLANE = 0.1f;
-	public static final float FAR_PLANE = 1000;
+	public static final float FAR_PLANE = 10000;
 
 	private Matrix4f projectionMatrix;
 	
@@ -53,8 +55,9 @@ public class Renderer {
 	}
 
 	// Shortcut to all the rendering and shading
-	public void render(Terrain terrain, Camera camera) {
+	public void render(List<Terrain> terrains, Camera camera) {
 		prepare();
+		for(Terrain terrain: terrains){
 		shader.start();
 		shader.loadViewMatrix(camera);
 		shader.loadTerrainAmplitude(terrain.getAmplitude());
@@ -64,6 +67,7 @@ public class Renderer {
 				GL11.GL_UNSIGNED_INT, 0);
 		unbindTexturedModel();
 		shader.stop();
+		}
 	}
 	
 	// Removes the shader from memory
